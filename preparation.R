@@ -7,7 +7,7 @@ library(sf)
 # States
 map <- st_read("Brasil/UFEBRASIL.shp", stringsAsFactors = FALSE)
 
-# Séries
+# Baixando as séries
 IST <- BETSget(
   c(15925, 15926, 15927, 15928, 15929,
     15930, 15931, 15932, 15933, 15934,
@@ -26,7 +26,7 @@ IST1 <- BETSget(
     15886, 15887),
   data.frame = TRUE)
 
-IST2<-BETSget(
+IST2 <- BETSget(
   c(15893, 15894, 15895, 15896, 15897,
     15898, 15899, 15900, 15901, 15902,
     15903, 15904, 15905, 15906, 15907,
@@ -35,104 +35,22 @@ IST2<-BETSget(
     15918, 15919),
   data.frame = TRUE)
 
-IST <- map_df(.x = IST, .f = tail)
-IST1 <- map_df(.x = IST, .f = tail)
-IST2 <- map_df(.x = IST, .f = tail)
+## Retirando a última observação e transformando em data.frame
+IST  <- map_df(.x = IST,  .f = function(x) x[nrow(x),])
+IST1 <- map_df(.x = IST1, .f = function(x) x[nrow(x),])
+IST2 <- map_df(.x = IST2, .f = function(x) x[nrow(x),])
 
-library(purrr)
+## Definindo os nomes da variável para o estado
+IST$State <- map$NM_ESTADO
+IST1$State <- map$NM_ESTADO
+IST2$State <- map$NM_ESTADO
 
+## Retendo somente estados e os valores
+IST  <- IST[,c(3,2)]
+IST1 <- IST1[,c(3,2)]
+IST2 <- IST2[,c(3,2)]
 
-# Criando os data.frames
-IST <- data.frame(States = map$NM_ESTADO,
-                  I = c(IST$`ACRE`$value,
-                        IST$`ALAGOAS`$value,
-                        IST$`AMAPÁ`$value,
-                        IST$`AMAZONAS`$value,
-                        IST$`BAHIA`$value,
-                        IST$`CEARÁ`$value,
-                        IST$`DISTRITO FEDERAL`$value,
-                        IST$`ESPIRITO SANTO`$value,
-                        IST$`GOIÁS`$value,
-                        IST$`MARANHÃO`$value,
-                        IST$`MATO GROSSO`$value,
-                        IST$`MATO GROSSO DO SUL`$value,
-                        IST$`MINAS GERAIS`$value,
-                        IST$`PARÁ`$value,
-                        IST$`PARAÍBA`$value,
-                        IST$`PARANÁ`$value,
-                        IST$`PERNAMBUCO`$value,
-                        IST$`PIAUÍ`$value,
-                        IST$`RIO DE JANEIRO`$value,
-                        IST$`RIO GRANDE DO NORTE`$value,
-                        IST$`RIO GRANDE DO SUL`$value,
-                        IST$`RONDÔNIA`$value,
-                        IST$`RORAIMA`$value,
-                        IST$`SANTA CATARINA`$value,
-                        IST$`SÃO PAULO`$value,
-                        IST$`SERGIPE`$value,
-                        IST$`TOCANTINS`$value)
-)
-
-IST1 <- data.frame(States = map$NM_ESTADO,
-                   I = c(IST1$`ACRE`$value,
-                         IST1$`ALAGOAS`$value,
-                         IST1$`AMAPÁ`$value,
-                         IST1$`AMAZONAS`$value,
-                         IST1$`BAHIA`$value,
-                         IST1$`CEARÁ`$value,
-                         IST1$`DISTRITO FEDERAL`$value,
-                         IST1$`ESPIRITO SANTO`$value,
-                         IST1$`GOIÁS`$value,
-                         IST1$`MARANHÃO`$value,
-                         IST1$`MATO GROSSO`$value,
-                         IST1$`MATO GROSSO DO SUL`$value,
-                         IST1$`MINAS GERAIS`$value,
-                         IST1$`PARÁ`$value,
-                         IST1$`PARAÍBA`$value,
-                         IST1$`PARANÁ`$value,
-                         IST1$`PERNAMBUCO`$value,
-                         IST1$`PIAUÍ`$value,
-                         IST1$`RIO DE JANEIRO`$value,
-                         IST1$`RIO GRANDE DO NORTE`$value,
-                         IST1$`RIO GRANDE DO SUL`$value,
-                         IST1$`RONDÔNIA`$value,
-                         IST1$`RORAIMA`$value,
-                         IST1$`SANTA CATARINA`$value,
-                         IST1$`SÃO PAULO`$value,
-                         IST1$`SERGIPE`$value,
-                         IST1$`TOCANTINS`$value)
-)
-
-IST2 <- data.frame(States = map$NM_ESTADO,
-                   I = c(IST2$`ACRE`$value,
-                         IST2$`ALAGOAS`$value,
-                         IST2$`AMAPÁ`$value,
-                         IST2$`AMAZONAS`$value,
-                         IST2$`BAHIA`$value,
-                         IST2$`CEARÁ`$value,
-                         IST2$`DISTRITO FEDERAL`$value,
-                         IST2$`ESPIRITO SANTO`$value,
-                         IST2$`GOIÁS`$value,
-                         IST2$`MARANHÃO`$value,
-                         IST2$`MATO GROSSO`$value,
-                         IST2$`MATO GROSSO DO SUL`$value,
-                         IST2$`MINAS GERAIS`$value,
-                         IST2$`PARÁ`$value,
-                         IST2$`PARAÍBA`$value,
-                         IST2$`PARANÁ`$value,
-                         IST2$`PERNAMBUCO`$value,
-                         IST2$`PIAUÍ`$value,
-                         IST2$`RIO DE JANEIRO`$value,
-                         IST2$`RIO GRANDE DO NORTE`$value,
-                         IST2$`RIO GRANDE DO SUL`$value,
-                         IST2$`RONDÔNIA`$value,
-                         IST2$`RORAIMA`$value,
-                         IST2$`SANTA CATARINA`$value,
-                         IST2$`SÃO PAULO`$value,
-                         IST2$`SERGIPE`$value,
-                         IST2$`TOCANTINS`$value)
-)
-
+## Salvando os data.frames para uso posterior
 save(map, file = 'data/map.rda')
 save(IST, file = 'data/IST.rda')
 save(IST1, file = 'data/IST1.rda')
