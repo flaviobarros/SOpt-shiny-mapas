@@ -17,18 +17,22 @@ load(file = 'data/IST1.rda')
 load(file = 'data/IST2.rda')
 
 ## User Interface ##
-
+## Cabeçalho
 header <- dashboardHeaderPlus(title = "MONITOR",
                               titleWidth = 200
 )
 
+## Barra lateral
 sidebar <- dashboardSidebar(
   width = 150,
   sidebarMenu(
-    menuItem("Maps", tabName = "maps", icon = icon("globe-americas", lib = "font-awesome"))
+    menuItem("Mapa1", tabName = "mapa1"),
+    menuItem("Mapa2", tabName = "mapa2"),
+    menuItem("Mapa2", tabName = "mapa3")
   )
 )
 
+## Caixa 1 para o mapa 1
 Boxm1 <-
   boxPlus(
     title = tags$b("States", style = 'font-family: "Georgia"'),
@@ -38,11 +42,11 @@ Boxm1 <-
     solidHeader = TRUE, 
     collapsible = TRUE,
     enable_dropdown = TRUE,
-    dropdown_menu = dropdownItemList(map$NM_ESTADO), # What should i do here?
     leafletOutput("m1"), # What should i do here?
     footer = NULL
   )
 
+## Caixa 2 para o mapa 2
 Boxm2 <-
   boxPlus(
     title = tags$b("States", style = 'font-family: "Georgia"'),
@@ -52,11 +56,11 @@ Boxm2 <-
     solidHeader = TRUE, 
     collapsible = TRUE,
     enable_dropdown = TRUE,
-    dropdown_menu = dropdownItemList(map$NM_ESTADO), # What should i do here?
     leafletOutput("m2"), # What should i do here?
     footer = NULL
   )
 
+## Caixa 3 para o mapa 3
 Boxm3 <-
   boxPlus(
     title = tags$b("States", style = 'font-family: "Georgia"'),
@@ -66,16 +70,27 @@ Boxm3 <-
     solidHeader = TRUE, 
     collapsible = TRUE,
     enable_dropdown = TRUE,
-    dropdown_menu = dropdownItemList(map$NM_ESTADO), # What should i do here?
     leafletOutput("m3"), # What should i do here?
     footer = NULL
   )
+
+## Body do dashboard
 body <- dashboardBody(
   tabItems(
     # Maps
-    tabItem(tabName = "maps",
+    tabItem(tabName = "mapa1",
+            fluidRow(
+              Boxm1 # Maps
+            )
+    ),
+    tabItem(tabName = "mapa2",
             fluidRow(
               Boxm2 # Maps
+            )
+    ),
+    tabItem(tabName = "mapa3",
+            fluidRow(
+              Boxm3 # Maps
             )
     )
   )
@@ -88,31 +103,30 @@ server <- function(input, output) {
   
   output$m1 <- renderLeaflet({
     tmap_mode("view")
-    IST <- inner_join(map, IST, by = c("NM_ESTADO" = "States"))
-    IST <- IST[, c(3,1,2,4,5,6)]
+    IST <- inner_join(map, IST, by = c("NM_ESTADO" = "State"))
+    IST <- IST[, c('NM_ESTADO', 'value', 'geometry')]
     m1  <- tm_shape(IST, name = "Maps") +
-      tm_polygons("I", palette = "Reds", title = "")
+      tm_polygons(col = "value", palette = "Reds", title = "")
     tmap_leaflet(m1)
   })
   
-  output$m2<-renderLeaflet({
+  output$m2 <- renderLeaflet({
     tmap_mode("view")
-    IST1 <- inner_join(map, IST1, by = c("NM_ESTADO" = "States"))
-    IST1 <- IST1[, c(3,1,2,4,5,6)]
-    m2   <- tm_shape(IST1, name = "Maps") +
-      tm_polygons("I", palette = "Reds", title = "")
+    IST1 <- inner_join(map, IST1, by = c("NM_ESTADO" = "State"))
+    IST1 <- IST1[, c('NM_ESTADO', 'value', 'geometry')]
+    m2  <- tm_shape(IST1, name = "Maps") +
+      tm_polygons(col = "value", palette = "Blues", title = "")
     tmap_leaflet(m2)
   })
   
-  output$m3<-renderLeaflet({
+  output$m3 <- renderLeaflet({
     tmap_mode("view")
-    IST2 <- inner_join(map, IST2, by = c("NM_ESTADO" = "States"))
-    IST2 <- IST2[, c(3,1,2,4,5,6)]
-    m3   <- tm_shape(IST2, name = "Maps") +
-      tm_polygons("I", palette = "Reds", title = "")
+    IST2 <- inner_join(map, IST2, by = c("NM_ESTADO" = "State"))
+    IST2 <- IST2[, c('NM_ESTADO', 'value', 'geometry')]
+    m3  <- tm_shape(IST2, name = "Maps") +
+      tm_polygons(col = "value", palette = "Oranges", title = "")
     tmap_leaflet(m3)
   })
-  
 }
 
 ## App ##
