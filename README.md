@@ -34,3 +34,4 @@ git clone git@github.com:flaviobarros/SOpt-shiny-mapas.git
 
 ## App em funcionamento
 
+![Image of Yaktocat](https://i.stack.imgur.com/gO5hx.gif)
